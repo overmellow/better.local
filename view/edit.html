@@ -1,0 +1,25 @@
+<div ng-include="'view/menu.html'"></div>
+
+<div class="panel panel-info">
+  <div class="panel-body">
+        <a href='#/' class = "pull-right"><span class='glyphicon glyphicon-remove'></span></a>
+        <div class="col-md-8">
+            <form>
+                <div class="input-group">
+                    <span class="input-group-addon">Name</span>
+                    <input type="text" name="name" class="form-control" placeholder="Name" ng-model="name">
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Amount</span>
+                    <input type="text" name="amount" class="form-control" placeholder="Amount" ng-model="amount">
+                </div>
+                <br>
+                <input type="range" name="allocation" min="0" max="100" ng-model="allocation" />
+                <br>
+                <button ng-click="update()" class="btn btn-default">Update</button>
+                <button ng-click="delete(id)" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+  </div>
+</div>

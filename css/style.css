@@ -1,0 +1,21 @@
+body{
+    margin-top: 70px;
+    background: #f5f5f5;
+}
+
+.container{
+    max-width: 800px;
+}
+
+#topbar{
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+}
+
+.panel{
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    border-radius: 3px !important;
+    border: 0;
+    background: #fff;
+}
