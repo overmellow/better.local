@@ -121,9 +121,9 @@ function myAppRouteConfig($routeProvider) {
             }
         }
     }).
-    when('/fund/add', {
+    when('/goal/add', {
         controller: 'CreateController',
-        templateUrl: 'view/fund/add.html',
+        templateUrl: 'view/goal/add.html',
         resolve: {
             auth: function ($q, authenticationSvc) {
                 var userInfo = authenticationSvc.getUserInfo();
@@ -134,10 +134,38 @@ function myAppRouteConfig($routeProvider) {
                 }
             }
         }
-    }).            
+    }).
+    when('/goal/deposit/:id', {
+        controller: 'DepositController',
+        templateUrl: 'view/goal/deposit.html',
+        resolve: {
+            auth: function ($q, authenticationSvc) {
+                var userInfo = authenticationSvc.getUserInfo();
+                if (userInfo) {
+                    return $q.when(userInfo);
+                } else {
+                    return $q.reject({ authenticated: false });
+                }
+            }
+        }
+    }).
+    when('/goal/withdraw/:id', {
+        controller: 'WithdrawController',
+        templateUrl: 'view/goal/withdraw.html',
+        resolve: {
+            auth: function ($q, authenticationSvc) {
+                var userInfo = authenticationSvc.getUserInfo();
+                if (userInfo) {
+                    return $q.when(userInfo);
+                } else {
+                    return $q.reject({ authenticated: false });
+                }
+            }
+        }
+    }).             
     when('/edit/:id', {
         controller: "EditController",
-        templateUrl: 'view/edit.html',
+        templateUrl: 'view/goal/edit.html',
         resolve: {
             auth: function ($q, authenticationSvc) {
                 var userInfo = authenticationSvc.getUserInfo();
@@ -186,28 +214,58 @@ myApp.factory('myInterceptor', ["$q", "$window", 'localStorageService', function
 
 myApp.controller('CreateController', function($scope, $http, $location, baseUrl) {
     $scope.submitTheForm = function() {
-        var data = {name: $scope.name, amount: $scope.amount, allocation : $scope.allocation};
-        $http.put(baseUrl + "api_fund/fund", data).success(function(response){alert(response.status);}).error(function(response){alert(response.status);});
+        var data = {name: $scope.name, target: $scope.target, balance: $scope.balance, allocation : $scope.allocation};
+        $http.put(baseUrl + "api_goal/goal", data).success(function(response){alert(response.status);}).error(function(response){alert(response.status);});
+        $location.path('/main');
+    }
+})
+
+myApp.controller('DepositController', function($scope, $http, $routeParams, $location, baseUrl) {
+    $http.get(baseUrl + "api_goal/goal/id/" + $routeParams.id)
+        .success(function(response){
+            $scope.id = response['id'];
+            $scope.name = response['name'];       
+        });
+    
+    $scope.submitDeposit = function() {
+        var data = {id: $scope.id, amount: $scope.amount, kind: 'deposit'};
+        $http.put(baseUrl + "api_transfer/transfer", data).success(function(response){alert(response.status);}).error(function(response){alert(response.status);});
+        $location.path('/main');
+    }
+})
+
+
+myApp.controller('WithdrawController', function($scope, $http, $routeParams, $location, baseUrl) {
+    $http.get(baseUrl + "api_goal/goal/id/" + $routeParams.id)
+        .success(function(response){
+            $scope.id = response['id'];
+            $scope.name = response['name'];       
+        });
+    
+    $scope.submitWithdraw = function() {
+        var data = {id: $scope.id, amount: -$scope.amount, kind: 'withdraw'};
+        $http.put(baseUrl + "api_transfer/transfer", data).success(function(response){alert(response.status);}).error(function(response){alert(response.status);});
         $location.path('/main');
     }
 })
 
 myApp.controller('EditController', function($scope, $http, $routeParams, $location, baseUrl) {
-    $http.get(baseUrl + "api_fund/fund/id/" + $routeParams.id)
+    $http.get(baseUrl + "api_goal/goal/id/" + $routeParams.id)
         .success(function(response){
             $scope.id = response['id'];
             $scope.name = response['name'];
-            $scope.amount = response['amount'];
+            $scope.balance = response['balance'];
+            $scope.target = response['target'];
             $scope.allocation = response['allocation'];
         });
     $scope.update = function() {
-        var data = {id: $scope.id, name: $scope.name, amount: $scope.amount, allocation : $scope.allocation};
-        $http.post(baseUrl + "api_fund/fund", data).success(function(response){alert(response.status);}).error(function(response){alert(response);});
+        var data = {id: $scope.id, name: $scope.name, target: $scope.target, balance: $scope.balance, allocation : $scope.allocation};
+        $http.post(baseUrl + "api_goal/goal", data).success(function(response){alert(response.status);}).error(function(response){alert(response);});
         $location.path('/main');
     }
     
     $scope.delete = function(index) {
-        $http.delete(baseUrl + "api_fund/fund/id/"+ index).success(function(response){alert(response);}).error(function(response){alert(response);});
+        $http.delete(baseUrl + "api_goal/goal/id/"+ index).success(function(response){alert(response);}).error(function(response){alert(response);});
         $location.path('/main');
     }
 });
@@ -224,14 +282,14 @@ myApp.controller("MainController", ["$scope", "$location", "$http", "authenticat
             }, function (error) {console.log(error);});
     };
     
-    $http.get(baseUrl + "api_fund/funds")
+    $http.get(baseUrl + "api_goal/goals")
         .success(function(response) {
-            $scope.funds = response;
+            $scope.goals = response;
     
             var sum = 0;
             var earnings = 0;
             for (var i = response.length - 1; i >= 0; i--) {
-                sum += parseFloat(response[i]['amount']);
+                sum += parseFloat(response[i]['balance']);
                 earnings += parseFloat(response[i]['earning']);
             }
  

@@ -7,19 +7,7 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li class="active"><a href="#">Summary <span class="sr-only">(current)</span></a></li>
-            <li><a href="#/fund/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Fund</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-                <li class="divider"></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
+            <li><a href="#/goal/add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Goal</a></li>
         </ul>
     </div>
 </nav>
@@ -27,7 +15,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-7">OVERVIEW</div>
+            <div class="col-md-7">Overview</div>
             <div class="col-md-4">
                 Total Balance : {{total | currency}}
                 <br>
@@ -40,20 +28,23 @@
     </div>
 </div>
 
-<div ng-repeat='fund in funds'>
+<div ng-repeat='goal in goals'>
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-7">{{fund.name | uppercase}}</div>
+                <div class="col-md-7 capitalize">{{goal.name}}</div>
                 <div class="col-md-4">
-                    Balance : {{fund.amount | currency}}
+                    Current Balance :<br>
+                    <a class="btn btn-success btn-xs" href='#/goal/deposit/{{goal.id}}'>Deposit</a> {{goal.balance | currency}}
                     <br>
-                    Risk : {{fund.allocation}}%
+                    Risk : {{goal.allocation}}%
                     <br>
-                    Total Earning : +{{fund.earning | currency}}
+                    Total Earning : +{{goal.earning | currency}}
+                    <br>
+                    Target : {{goal.target | currency}}
                 </div>
                 <div class="col-md-1">
-                    <a href='#/edit/{{fund.id}}' class = "pull-right"><span class='glyphicon glyphicon-cog'></span></a>
+                    <a href='#/edit/{{goal.id}}' class = "pull-right"><span class='glyphicon glyphicon-cog'></span></a>
                 </div>
             </div>
         </div>

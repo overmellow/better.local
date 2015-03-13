@@ -1,13 +1,16 @@
 <div ng-include="'view/menu.html'"></div>
 
-<div class="panel panel-info">
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        Deposit Money
+    </div>
   <div class="panel-body">
         <a href='#/' class = "pull-right"><span class='glyphicon glyphicon-remove'></span></a>
         <div class="col-md-8">            
             <form>
                 <div class="input-group">
-                    <span class="input-group-addon">Name</span>
-                    <input type="text" name="name" class="form-control" placeholder="Name" ng-model="name">
+                    <span class="input-group-addon">Goal Name</span>
+                    <input type="text" name="name" class="form-control" placeholder="Name" ng-model="name" disabled="{{true}}">
                 </div>
                 <br>
                 <div class="input-group">
@@ -15,9 +18,7 @@
                     <input type="text" name="amount" class="form-control" placeholder="Amount" ng-model="amount">
                 </div>
                 <br>
-                <input type="range" name="allocation" min="0" max="100" ng-model="allocation" />
-                <br>
-                <button ng-click="submitTheForm()" class="btn btn-default">Create Fund</button>
+                <button ng-click="submitWithdraw()" class="btn btn-danger">Withdraw Money</button>
             </form>
         </div>
   </div>
